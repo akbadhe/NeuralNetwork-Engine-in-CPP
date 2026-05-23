@@ -1,3 +1,4 @@
+#pragma once
 #include "common.h"
 #include "matrix.h"
 
@@ -7,14 +8,18 @@ public:
     Matrix bias;
     Matrix layer_input;
     Matrix layer_output;
+    Matrix input_gradient;
     float LR;
+    bool isOutputLayer;
 
     //Contructor to initilialize all matrices with rows and cols and random weights
-    Layer(int in_dimensions, int out_dimensions)
+    Layer(int in_dimensions, int out_dimensions, bool layerType=false)
        :weights(in_dimensions,out_dimensions),
         bias(1,out_dimensions),
         layer_input(1,in_dimensions),
-        layer_output(1,out_dimensions){
+        layer_output(1,out_dimensions),
+        input_gradient(1,in_dimensions),
+        isOutputLayer(layerType){
 
         weights.randomize(-0.5f,0.5f);
         LR=1;
@@ -63,6 +68,7 @@ public:
         Matrix wtranspose = weights.transpose(); // Shape: outputs x inputs
         Matrix inp_gradient = Matrix::multiply(delta, wtranspose); // (1 x outputs) * (outputs x inputs) = (1 x inputs)
     
+        input_gradient=inp_gradient;
         return inp_gradient;
     }
 

@@ -2,12 +2,14 @@
 #include "common.h"
 #include <cmath>
 #include <algorithm>
+#include <unordered_map>
 
 class Matrix{
 public: 
     int _rows, _cols;
     // Using a flattened vector instead of 2D vector(mat[row][col] = row*numOfCols + col)
     vector<float> _mat;
+
 
     Matrix(int r, int c, int iv=0): _rows(r), _cols(c){
         _mat.resize(_rows*_cols, iv);
@@ -116,6 +118,7 @@ public:
         return _cols;
     }
 
+    //prints the matrix dimensions
     void dimensions(){
         cout<<_rows<<"x"<<_cols<<endl;
     }
@@ -135,16 +138,19 @@ public:
         return 1.f/(1.f + expf(-x));
     }
 
+    //Apply sigmoid activation to complete matrix
     void sigmoidActivate(){
         for(int i=0; i< (_rows*_cols); i++){
             _mat[i] = sigmoid(_mat[i]);
         }
     }
 
+    //Derivative of sigmoid function
     float sigmoidDerivative(float sigmoid_output) {
         return sigmoid_output * (1.0f - sigmoid_output);
     }
 
+    //Apply sigmoid derivative to complete matrix
     Matrix sigmoidDifferentiateLayer(){
         for(int i=0; i< (_rows*_cols); i++){
             _mat[i] = sigmoidDerivative(_mat[i]);
